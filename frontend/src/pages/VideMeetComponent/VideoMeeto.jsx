@@ -119,6 +119,95 @@ const VideoMeet=()=>{
          getUserMdia()
        }
     },[video,audio])
+     
+      let gotMessageFromServer=(fromId,message)=>{
+
+      }
+     let addMessage=()=>{
+
+     }
+     let connectToSocketServer=()=>{
+        socketRef.current=io.connect(server_url,{secure:false})
+        socketRef.current.on('signal',gotMessageFromServer)
+        socketRef.current.on('connect',()=>{
+             socketRef.current.emit('join-call',window.location.href)
+             socketRef.current=socketRef.current.id 
+
+             socketRef.current.on('chat-message',addMessage)
+
+             socketRef.current.on('user-left',(id)=>{
+                 setVideo((videos)=>{
+                    videos.filter((video)=>video.socketId!==id)
+                 })
+                 socketRef.current.on('user-joined',(id,clients)=>{
+                      clients.forEach((socketListid)=>{
+                          
+                        connections[socketListid]=new RTCPeerConnection(peerConfigConnections)
+                          
+                        connections[socketListid].onicecandidate=(event)=>{
+                            if(event.candidate!==null){ // ice is a protocol -> interactivity connection establishement 
+                                socketRef.current.emit("signal",socketListid,JSON.stringify({"ice":event.candidate}))
+                            }
+                        }
+
+                        connections[socketListid].onaddstream=(event)=>{
+
+                            let videoExists=videoRef.current.find((video)=>{
+                                 video.socketId===socketListid
+                            })
+                            if(videoExists){
+                                setVideo((video)=>{
+                                    const updatedVideos=videos.map((video)=>{
+                                         video.socketId===socketListid  ? {...video ,stream:event.stream} : video
+                                    })
+                                    videoRef.current=updatedVideos 
+
+                                    return updatedVideos
+                                })
+                            }else{
+                                   let newVideo={
+                                      socketId:socketListid,
+                                      stream:event.stream ,
+                                      autoPlay:true,
+                                      playsOnline:true
+                                   }
+                                   setVideos((video)=>{
+                                     const  updatedVideos=[...videos,newVideo]
+                                      videoRef.current=updatedVideos 
+
+                                      return updatedVideos   
+                                 })
+                            }
+                        }
+
+                        if(window.localStream!==undefined && window.localStream!==null){
+                              connections[socketListid].addStream(window.localStream)
+                        }else{
+                             
+                        }
+                      })
+
+                      if(id===socketIdRef.current){
+                         for( let id2 in connections){
+                             if(id2===socketIdRef.current) continue 
+
+                             try{
+                                  
+                             }catch(err){
+                               connections[id2].createOffer().then((description)=>{
+                                   connections[id2].setLocalDescription(description)
+                                    .then(()=>{          // sdp-> session description
+                                         socketRef.current.emit('signal',id2,JSON.stringify({"sdp":connections[id2].localDescription}))
+                                    })
+                                    .catch((e)=>console.log(e))
+                               })
+                             }
+                         }
+                      }
+                 })
+             })
+        })
+     }
 
     let getMedia=()=>{
          setVideo(videoAvailable) 
@@ -133,7 +222,7 @@ const VideoMeet=()=>{
                          
                          <h2>Enter Into Lobby</h2>
                           <TextField id="outlined-basic" label='username' onChange={(e)=>setUsername(e.target.value)} value={username} variant="outlined"></TextField>
-                        <Button variant='contained'>Connect</Button>
+                        <Button variant='contained' onClick={getMedia}>Connect</Button>
 
                         <div>
                             <video ref={localVideoRefernece}></video>
