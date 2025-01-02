@@ -1,0 +1,52 @@
+.landingPageContainer{
+    width: 100vw;
+    height: 100vh;
+    background:url('/background.png');
+    background-repeat: no-repeat;
+    background-size: cover; 
+}
+.landingPageContainer nav{
+    /* padding-inline means left-right block means top bottom */
+   padding-inline: 1.2rem;  
+   padding-block:1.6rem;
+   color: #fff;
+   display: flex;
+   justify-content: space-between;
+   cursor: pointer;
+}
+.landingPageContainer nav h2{
+    font-size:2rem ;
+    font-weight: 700px; 
+}
+.landingPageContainer nav .navList{
+    display: flex;
+    gap:2rem ;
+}
+.ladingMainContainer{
+    display: flex;
+    color: #fff;
+    justify-content: space-between;
+    padding-inline: 3rem;
+    height: 80vh;
+    align-items: center;
+}
+.landingPageContainer >div:nth-child(1){
+    font-size: 2rem ;
+}
+.ladingMainContainer>div:nth-child(1) div[role='button']{
+    background-color: #D97500;
+    width: fit-content;
+    padding: 1rem;
+    border-radius: 16px ;
+    margin-top: 2rem;
+}
+.ladingMainContainer >div:nth-child(1) div[role='button'] a{
+    text-decoration: none;
+    color: #fff;
+    font-size: 1.2rem;
+    
+}
+.landingMainContainer>div:nth-child(2) img{
+    height: 70vh;
+    width: auto;
+}

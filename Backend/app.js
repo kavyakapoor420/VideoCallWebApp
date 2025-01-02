@@ -5,7 +5,7 @@ import mongoose from 'mongoose'
 import {createServer} from 'http'
 
 import UserRouter from './routes/UserRouter.js'
-import connectToSocket from './controllers/socketManager.js'
+import {connectToSocket} from './controllers/socketManager.js'
 
 
 const app=express()
@@ -21,8 +21,12 @@ app.use(express.urlencoded({extended:true}))
 
 app.use('/api/v1/users',UserRouter)
 
+app.get('/',(req,res)=>{
+    res.send('root is working')
+})
+
 async function main(){
-    await mongoose.connect('mongodb://localhost:27017/zoom')
+    await mongoose.connect('mongodb://127.0.0.1:27017/zoom')
 }
 main().then(()=>{
     console.log('Connected to Database')
