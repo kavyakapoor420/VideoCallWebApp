@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt'
 import crypto from 'crypto'
 import httpStatus from 'http-status'
 import UserModel from '../models/UserModel.js'
+import MeetingModel from '../models/MeetingModel.js'
 
 
 const JWT_SECRET="abcd"

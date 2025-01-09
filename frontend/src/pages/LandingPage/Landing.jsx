@@ -40,10 +40,13 @@
 
 
 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './LandingPage.css';
 
 const Landing = () => {
+
+    const router=useNavigate()
+
   return (
     <div className="landingPageContainer">
       {/* Navbar */}
@@ -52,9 +55,12 @@ const Landing = () => {
           <h2>VideoCall with Your PeeRs</h2>
         </div>
         <div className="navList">
-          <Link to="/guest" className="navLink">Join As Guest</Link>
-          <Link to="/register" className="navLink">Register</Link>
-          <Link to="/login" className="navLink loginButton">Login</Link>
+          <Link to="/guest" className="navLink" 
+          // onClick={()=>window.location.href='abcd'}  // dont do this  as it will reload whole application instead use useNavigate 
+            onClick={()=>router('/abcd')}
+         >Join As Guest</Link>
+          <Link to="/auth" className="navLink">Register</Link>
+          <Link to="/auth" className="navLink loginButton">Login</Link>
         </div>
       </nav>
 
@@ -68,7 +74,7 @@ const Landing = () => {
           <Link to="/home" className="ctaButton">Get Started</Link>
         </div>
         <div className="imageContainer">
-          <img src="/mobile.png" alt="Mobile Illustration" className="responsiveImage" />
+          <img src="/ChillGuy.png" alt="Mobile Illustration" className="responsiveImage" />
         </div>
       </div>
     </div>
